@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import com.torres.workshop.domain.Post;
 import com.torres.workshop.domain.User;
 import com.torres.workshop.dto.AuthorDTO;
+import com.torres.workshop.dto.CommentDTO;
 import com.torres.workshop.repository.PostRepository;
 import com.torres.workshop.repository.UserRepository;
 
@@ -40,6 +41,12 @@ public class Instantiation implements CommandLineRunner {
 		
 		Post post1 = new Post(null, sdf.parse("07/11/2022"), "Partiu viagem", "Vou viajar para o Piauí.", new AuthorDTO(maria));
 		Post post2 = new Post(null, sdf.parse("07/12/2022"), "Retorno da viagem", "Vou voltar para bsb.", new AuthorDTO(joao));
+		
+		CommentDTO c1 = new CommentDTO("Boa viagem!", sdf.parse("07/11/2022"), new AuthorDTO(joao));
+		CommentDTO c2 = new CommentDTO("Espero que tenha aproveitado!", sdf.parse("07/12/2022"), new AuthorDTO(paulo));
+		
+		post1.getComments().addAll(Arrays.asList(c1));
+		post2.getComments().addAll(Arrays.asList(c2));
 		
 		postRepository.saveAll(Arrays.asList(post1, post2));
 		
