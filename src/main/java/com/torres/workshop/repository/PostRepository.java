@@ -1,5 +1,6 @@
 package com.torres.workshop.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -11,9 +12,14 @@ import com.torres.workshop.domain.Post;
 @Repository
 public interface PostRepository extends MongoRepository<Post, String>{
 	
-	List<Post> findByTitleContainingIgnoreCase(String title);
+	List<Post> findByTitleContainingIgnoreCase(String text);
 	
 	@Query("{ 'title': {$regex: ?0, $options: 'i'} }")
-	List<Post> searchTitle(String title);
+	List<Post> searchTitle(String text);
+	
+	//@Query("{ $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'body': { $regex: ?0, $options: 'i' } }, { 'comments.text': { $regex: ?0, $options: 'i' } } ] }")
+	
+	@Query("{ $and: [ { date: { $gte: ?1 } }, { date: { $lte: ?2 } },{ $or: [ { 'title': {$regex: ?0, $options: 'i'} }, { 'body': { $regex: ?0, $options: 'i' } }, { 'comments.text': { $regex: ?0, $options: 'i' } } ] } ] }")
+	List<Post> fullSearch(String text, Date minDate, Date maxDate);
 	
 }
